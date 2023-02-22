@@ -201,8 +201,6 @@ class CachedNetworkImage extends StatelessWidget {
   /// Will resize the image and store the resized image in the disk cache.
   final int? maxHeightDiskCache;
 
-  late final bool? hasError;
-
   /// CachedNetworkImage shows a network image using a caching mechanism. It also
   /// provides support for a placeholder, showing an error and fading into the
   /// loaded image. Next to that it supports most features of a default Image
@@ -252,10 +250,6 @@ class CachedNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (hasError ?? false) {
-      return const SizedBox.shrink();
-    }
-
     var octoPlaceholderBuilder =
         placeholder != null ? _octoPlaceholderBuilder : null;
     var octoProgressIndicatorBuilder =
