@@ -60,7 +60,7 @@ class CachedNetworkImage extends StatelessWidget {
     return CachedNetworkImageProvider(url, scale: scale).evict();
   }
 
-  final CachedNetworkImageProvider _image;
+  late final CachedNetworkImageProvider _image;
 
   /// Option to use cachemanager with other settings
   final BaseCacheManager? cacheManager;
@@ -201,12 +201,14 @@ class CachedNetworkImage extends StatelessWidget {
   /// Will resize the image and store the resized image in the disk cache.
   final int? maxHeightDiskCache;
 
+  late final bool? hasError;
+
   /// CachedNetworkImage shows a network image using a caching mechanism. It also
   /// provides support for a placeholder, showing an error and fading into the
   /// loaded image. Next to that it supports most features of a default Image
   /// widget.
   CachedNetworkImage({
-    Key? key,
+    super.key,
     required this.imageUrl,
     this.httpHeaders,
     this.imageBuilder,
@@ -236,19 +238,29 @@ class CachedNetworkImage extends StatelessWidget {
     this.maxHeightDiskCache,
     ImageRenderMethodForWeb imageRenderMethodForWeb =
         ImageRenderMethodForWeb.HtmlImage,
-  })  : _image = CachedNetworkImageProvider(
-          imageUrl,
-          headers: httpHeaders,
-          cacheManager: cacheManager,
-          cacheKey: cacheKey,
-          imageRenderMethodForWeb: imageRenderMethodForWeb,
-          maxWidth: maxWidthDiskCache,
-          maxHeight: maxHeightDiskCache,
-        ),
-        super(key: key);
+  }) {
+    try {
+      _image = CachedNetworkImageProvider(
+        imageUrl,
+        headers: httpHeaders,
+        cacheManager: cacheManager,
+        cacheKey: cacheKey,
+        imageRenderMethodForWeb: imageRenderMethodForWeb,
+        maxWidth: maxWidthDiskCache,
+        maxHeight: maxHeightDiskCache,
+      );
+      hasError = false;
+    } on Exception catch (e) {
+      hasError = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (hasError ?? false) {
+      return const SizedBox.shrink();
+    }
+
     var octoPlaceholderBuilder =
         placeholder != null ? _octoPlaceholderBuilder : null;
     var octoProgressIndicatorBuilder =
