@@ -239,20 +239,15 @@ class CachedNetworkImage extends StatelessWidget {
     ImageRenderMethodForWeb imageRenderMethodForWeb =
         ImageRenderMethodForWeb.HtmlImage,
   }) {
-    try {
-      _image = CachedNetworkImageProvider(
-        imageUrl,
-        headers: httpHeaders,
-        cacheManager: cacheManager,
-        cacheKey: cacheKey,
-        imageRenderMethodForWeb: imageRenderMethodForWeb,
-        maxWidth: maxWidthDiskCache,
-        maxHeight: maxHeightDiskCache,
-      );
-      hasError = false;
-    } on Exception catch (e) {
-      hasError = true;
-    }
+    _image = CachedNetworkImageProvider(
+      imageUrl,
+      headers: httpHeaders,
+      cacheManager: cacheManager,
+      cacheKey: cacheKey,
+      imageRenderMethodForWeb: imageRenderMethodForWeb,
+      maxWidth: maxWidthDiskCache,
+      maxHeight: maxHeightDiskCache,
+    );
   }
 
   @override
